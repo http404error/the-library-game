@@ -100,9 +100,10 @@ void AlibraryCharacter::SetupPlayerInputComponent(class UInputComponent* InputCo
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	InputComponent->BindAxis("MoveRight", this, &AlibraryCharacter::MoveRight);
+	InputComponent->BindAxis("MoveIn", this, &AlibraryCharacter::MoveIn);
 
-	InputComponent->BindTouch(IE_Pressed, this, &AlibraryCharacter::TouchStarted);
-	InputComponent->BindTouch(IE_Released, this, &AlibraryCharacter::TouchStopped);
+	//InputComponent->BindTouch(IE_Pressed, this, &AlibraryCharacter::TouchStarted);
+	//InputComponent->BindTouch(IE_Released, this, &AlibraryCharacter::TouchStopped);
 }
 
 void AlibraryCharacter::MoveRight(float Value)
@@ -127,13 +128,30 @@ void AlibraryCharacter::MoveRight(float Value)
 	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
 }
 
-void AlibraryCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
+void AlibraryCharacter::MoveIn( float Value )
 {
-	// jump on any touch
-	Jump();
+	UpdateAnimation();
+
+	if (Controller != nullptr)
+	{
+		if (Value < 0.0f)
+		{
+			Controller->SetControlRotation( FRotator( 0.0, 180.0f, 0.0f ) );
+		}
+		else if (Value > 0.0f)
+		{
+			Controller->SetControlRotation( FRotator( 0.0f, 0.0f, 0.0f ) );
+		}
+	}
 }
 
-void AlibraryCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	StopJumping();
-}
+//void AlibraryCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
+//{
+//	// jump on any touch
+//	Jump();
+//}
+//
+//void AlibraryCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
+//{
+//	StopJumping();
+//}
